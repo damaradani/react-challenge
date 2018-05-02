@@ -1,0 +1,22 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  height: auto;
+  padding: 10px;
+  color: white;
+}
+
+.App-header .btn {
+  margin: 0px 5px;
+}
+
+.Genre-menus {
+  display: inline-flex;
+}
+
+Table {
+  overflow-x: auto;
+}
