@@ -1,31 +1,14 @@
 import React, { Component } from 'react'
-import store from '../../store'
 import {Table} from 'react-materialize'
 import axios from 'axios'
 import Pod from './Pod'
+import { connect } from 'react-redux'
 
 class Main extends Component {
-  constructor() {
-    super()
-    this.state = {
-      data: store.getState().podcasts
-    }
-
-    this.unsubscribe = store.subscribe(() => {
-      const newPodcast = store.getState().podcasts
-      this.setState({
-        data: newPodcast
-      })
-    })
-  }
-
   fetchItunesPodcast() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=26&limit=9`)
       .then(response => {
-        store.dispatch({
-          type: 'LOAD_NEW_PODCAST_DATA',
-          payload: response.data.results
-        })
+        this.props.getPodcast(response.data.results)
       })
       .catch(err => console.log(err))
   }
@@ -34,12 +17,8 @@ class Main extends Component {
     this.fetchItunesPodcast()
   }
 
-  componentWillUnmount() {
-    this.unsubscribe()
-  }
-
   render() {
-    let podcasts = this.state.data.map((podcast, index) =>
+    let podcasts = this.props.podcasts.map((podcast, index) =>
       <Pod data={podcast} index={index} key={podcast.trackId} />
     )
 
@@ -64,4 +43,18 @@ class Main extends Component {
   }
 }
 
-export default Main
+const mapStateToProps = (state) => ({
+  podcasts: state.podcasts
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getPodcast: (podcasts) => dispatch({
+    type:'LOAD_NEW_PODCAST_DATA',
+    payload: podcasts
+  })
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main)

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Navbar } from 'react-materialize'
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
+import swal from 'sweetalert'
+
 import Home from './components/Home'
 import Login from './components/Login'
 import NeedLogin from './components/NeedLogin'
@@ -9,6 +11,19 @@ import Podcast from './components/Podcast'
 import './App.css'
 
 class App extends Component {
+  logout() {
+    swal({
+      title: 'Are you sure?',
+      text: `Do you really Logout`,
+      icon: 'warning',
+      buttons: [true, 'Yes Please']
+    }).then(result => {
+      if (result) {
+        localStorage.removeItem('token')
+      }
+    })
+  }
+ 
   render() {
     return (
       <Router>

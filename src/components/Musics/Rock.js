@@ -1,33 +1,15 @@
 import React, { Component } from 'react'
-import store from '../../store'
 import {Table} from 'react-materialize'
 import axios from 'axios'
 import Songs from './Songs'
+import { connect } from 'react-redux'
+// import {  } from 'redux'
 
 class Rock extends Component {
-  constructor() {
-    super()
-    this.state = {
-      data: store.getState().musics
-    }
-
-    this.unsubscribe = store.subscribe(() => {
-      const newData = store.getState().musics
-      this.setState({
-        data: newData
-      })
-    })
-  }
-
   fetchItunesData() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=21&limit=9`)
       .then(response => {
-        // this.setState({data : response.data.results})
-        store.dispatch({
-          type: 'LOAD_NEW_MUSIC_DATA',
-          payload: response.data.results
-        })
-        // console.log('', store.getState())
+        this.props.getRock(response.data.results)
       })
       .catch(err => console.log(err))
   }
@@ -36,12 +18,8 @@ class Rock extends Component {
     this.fetchItunesData()
   }
 
-  componentWillUnmount() {
-    this.unsubscribe()
-  }
-
   render() {
-    let songs = this.state.data.map((song, index) => 
+    let songs = this.props.musics.map((song, index) => 
       <Songs data={song} index={index} key={song.trackId}/>
     )
 
@@ -67,4 +45,18 @@ class Rock extends Component {
   }
 }
 
-export default Rock
+const mapStateToProps = (state) => ({
+  musics: state.musics
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getRock: (Rock) => dispatch({
+    type: 'LOAD_NEW_MUSIC_DATA',
+    payload: Rock
+  })
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Rock)

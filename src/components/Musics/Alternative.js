@@ -1,32 +1,14 @@
 import React, { Component } from 'react'
 import {Table} from 'react-materialize'
 import axios from 'axios'
-import store from '../../store'
 import Songs from './Songs'
+import { connect } from 'react-redux'
 
 class Alternative extends Component {
-  constructor() {
-    super()
-    this.state = {
-      data: store.getState().musics
-    }
-
-    this.unsubscribe = store.subscribe(() => {
-      const newData = store.getState().musics
-      this.setState({
-        data: newData
-      })
-    })
-  }
-
   fetchItunesData() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=20&limit=9`)
       .then(response => {
-        // this.setState({data : response.data.results})
-        store.dispatch({
-          type: 'LOAD_NEW_MUSIC_DATA',
-          payload: response.data.results
-        })
+        this.props.getAlternative(response.data.results)
       })
       .catch(err => console.log(err))
   }
@@ -35,12 +17,8 @@ class Alternative extends Component {
     this.fetchItunesData()
   }
 
-  componentWillUnmount() {
-    this.unsubscribe()
-  }
-
   render() {
-    let songs = this.state.data.map((song, index) => 
+    let songs = this.props.musics.map((song, index) => 
       <Songs data={song} index={index} key={song.trackId}/>
     )
 
@@ -66,4 +44,18 @@ class Alternative extends Component {
   }
 }
 
-export default Alternative
+const mapStateToProps = (state) => ({
+  musics: state.musics
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  getAlternative: (Alternative) => dispatch({
+    type: 'LOAD_NEW_MUSIC_DATA',
+    payload: Alternative
+  })
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Alternative)
