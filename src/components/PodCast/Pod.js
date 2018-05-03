@@ -8,7 +8,6 @@ class Pod extends Component {
       trackId,
       artistName,
       trackName,
-      artistViewUrl,
       trackViewUrl
     } = this.props.data
     return (

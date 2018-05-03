@@ -1,37 +1,42 @@
 import React, { Component } from 'react'
 import {Table} from 'react-materialize'
 import axios from 'axios'
+import store from '../../store'
 import Songs from './Songs'
 
 class Alternative extends Component {
   constructor() {
     super()
     this.state = {
-      data: [
-        {
-          trackId: 0,
-          artworkUrl60: '',
-          artistName: 'Alternative 1',
-          trackName: 'Alternative Songs 1',
-          artistViewUrl: 'link Artist',
-          trackViewUrl: 'track url',
-          previewUrl: 'trackpreview'
-        }
-      ]
+      data: store.getState().musics
     }
+
+    this.unsubscribe = store.subscribe(() => {
+      const newData = store.getState().musics
+      this.setState({
+        data: newData
+      })
+    })
   }
 
   fetchItunesData() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=20&limit=9`)
       .then(response => {
-        console.log(response.data.results)
-        this.setState({data : response.data.results})
+        // this.setState({data : response.data.results})
+        store.dispatch({
+          type: 'LOAD_NEW_MUSIC_DATA',
+          payload: response.data.results
+        })
       })
       .catch(err => console.log(err))
   }
 
   componentDidMount() {
     this.fetchItunesData()
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   render() {

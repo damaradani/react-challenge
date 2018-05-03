@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import store from '../../store'
 import {Table} from 'react-materialize'
 import axios from 'axios'
 import Pod from './Pod'
@@ -7,30 +8,34 @@ class Main extends Component {
   constructor() {
     super()
     this.state = {
-      data: [
-        {
-          trackId: 0,
-          artworkUrl60: '',
-          artistName: 'PodCast 1',
-          trackName: 'Podcast 1',
-          artistViewUrl: 'link Artist',
-          trackViewUrl: 'track url'
-        }
-      ]
+      data: store.getState().podcasts
     }
+
+    this.unsubscribe = store.subscribe(() => {
+      const newPodcast = store.getState().podcasts
+      this.setState({
+        data: newPodcast
+      })
+    })
   }
 
   fetchItunesPodcast() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=26&limit=9`)
       .then(response => {
-        console.log(response.data.results)
-        this.setState({data : response.data.results})
+        store.dispatch({
+          type: 'LOAD_NEW_PODCAST_DATA',
+          payload: response.data.results
+        })
       })
       .catch(err => console.log(err))
   }
 
   componentDidMount() {
     this.fetchItunesPodcast()
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   render() {

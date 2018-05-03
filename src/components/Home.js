@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import './Home.css'
 
 class Home extends Component {
   render() {
     return (
-      <div className=".container-fluid">
+      <div className="container">
         <h2>iTunes.</h2>
         <h2>Musik dan film Anda adalah bintangnya.</h2>
         <p>iTunes adalah cara termudah untuk menata dan menikmati musik dan film 
