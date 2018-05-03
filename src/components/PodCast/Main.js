@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import {Table} from 'react-materialize'
 import axios from 'axios'
 import Pod from './Pod'
+import { getPodcasts } from '../../store/PodCast/actions'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 class Main extends Component {
   fetchItunesPodcast() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=26&limit=9`)
       .then(response => {
-        this.props.getPodcast(response.data.results)
+        this.props.getPodcasts(response.data.results)
       })
       .catch(err => console.log(err))
   }
@@ -47,12 +49,9 @@ const mapStateToProps = (state) => ({
   podcasts: state.podcasts
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  getPodcast: (podcasts) => dispatch({
-    type:'LOAD_NEW_PODCAST_DATA',
-    payload: podcasts
-  })
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getPodcasts
+}, dispatch)
 
 export default connect(
   mapStateToProps,

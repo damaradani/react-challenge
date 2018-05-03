@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import {Table} from 'react-materialize'
 import axios from 'axios'
 import Songs from './Songs'
+import { getMusics } from '../../store/Musics/actions'
 import { connect } from 'react-redux'
-// import {  } from 'redux'
+import { bindActionCreators } from 'redux'
 
 class Rock extends Component {
   fetchItunesData() {
     axios.get(`https://itunes.apple.com/search?term=genre&genreId=21&limit=9`)
       .then(response => {
-        this.props.getRock(response.data.results)
+        // console.log(response.data.results)
+        this.props.getMusics(response.data.results)
       })
       .catch(err => console.log(err))
   }
@@ -49,12 +51,9 @@ const mapStateToProps = (state) => ({
   musics: state.musics
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  getRock: (Rock) => dispatch({
-    type: 'LOAD_NEW_MUSIC_DATA',
-    payload: Rock
-  })
-})
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  getMusics
+}, dispatch)
 
 export default connect(
   mapStateToProps,
