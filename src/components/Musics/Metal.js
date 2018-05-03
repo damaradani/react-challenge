@@ -9,11 +9,11 @@ class Metal extends Component {
   constructor() {
     super()
     this.state = {
-      data: store.getState()
+      data: store.getState().musics
     }
 
     this.unsubscribe = store.subscribe(() => {
-      const newData = store.getState()
+      const newData = store.getState().musics
       this.setState({
         data: newData
       })
