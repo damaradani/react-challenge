@@ -1,30 +1,18 @@
 import React, { Component } from 'react'
 import {Table} from 'react-materialize'
-import axios from 'axios'
-import Songs from './Songs'
+
 import { getMusics } from '../../store/Musics/actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-class Rock extends Component {
-  fetchItunesData() {
-    axios.get(`https://itunes.apple.com/search?term=genre&genreId=21&limit=9`)
-      .then(response => {
-        // console.log(response.data.results)
-        this.props.getMusics(response.data.results)
-      })
-      .catch(err => console.log(err))
-  }
+import TableContent from './TableContent'
 
+class Rock extends Component {
   componentDidMount() {
-    this.fetchItunesData()
+    this.props.getMusics(21)
   }
 
   render() {
-    let songs = this.props.musics.map((song, index) => 
-      <Songs data={song} index={index} key={song.trackId}/>
-    )
-
     return (
       <div className='container'>
         <h2>Random 9 Rock Songs from Itunes</h2>
@@ -36,10 +24,11 @@ class Rock extends Component {
               <th>Artist</th>
               <th>Track Name</th>
               <th>Preview Track</th>
+              <th>Add</th>
             </tr>
           </thead>
           <tbody>
-            {songs}
+            <TableContent />
           </tbody>
         </Table>
       </div>
@@ -47,15 +36,11 @@ class Rock extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  musics: state.musics
-})
-
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getMusics
 }, dispatch)
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(Rock)

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Modal, Row, Input, Button } from 'react-materialize'
-// import { Router, Redirect } from 'react-router-dom'
-// import NeedLogin from './NeedLogin'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import swal from 'sweetalert'
+import { login } from '../store/User/action'
 
 class Login extends Component {
   constructor() {
@@ -17,13 +18,11 @@ class Login extends Component {
     e.preventDefault()
     if (this.state.email && this.state.password) {
       console.log('Ga Kosong')
-      localStorage.setItem('token', this.state.email + this.state.password)
-      // return <NeedLogin /> Ga Bisa
-      // return <Redirect push to="/need-login"/> Ga bisa juga
+      localStorage.setItem('token', this.state.email)
       console.log('Query Selector', document.querySelector('#log-in'))
       document.querySelector('#log-in').className.replace('modal open', 'modal-close')
       console.log('Query Selector After-->', document.querySelector('#log-in'))
-      // this.props.history.push('/need-login')
+      this.props.login(this.state.email)
     } else if(!this.state.email) {
       swal({
         icon: 'error',
@@ -67,4 +66,15 @@ class Login extends Component {
   }
 }
 
-export default Login
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  login
+}, dispatch)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)

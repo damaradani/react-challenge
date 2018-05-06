@@ -1,29 +1,18 @@
 import React, { Component } from 'react'
 import {Table} from 'react-materialize'
-import axios from 'axios'
-import Songs from './Songs'
+
 import { getMusics } from '../../store/Musics/actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-class Metal extends Component {
-  fetchItunesData() {
-    axios.get(`https://itunes.apple.com/search?term=genre&genreId=1153&limit=9`)
-      .then(response => {
-        this.props.getMusics(response.data.results)
-      })
-      .catch(err => console.log(err))
-  }
+import TableContent from './TableContent'
 
+class Metal extends Component {
   componentDidMount() {
-    this.fetchItunesData()
+    this.props.getMusics(1153)
   }
 
   render() {
-    let songs = this.props.musics.map((song, index) => 
-      <Songs data={song} index={index} key={song.trackId}/>
-    )
-
     return (
       <div className="container">
         <h2>Random 9 Metal Songs from Itunes</h2>
@@ -35,10 +24,11 @@ class Metal extends Component {
               <th>Artist</th>
               <th>Track Name</th>
               <th>Preview Track</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {songs}
+            <TableContent />
           </tbody>
         </Table>
       </div>
@@ -46,15 +36,11 @@ class Metal extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  musics: state.musics
-})
-
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   getMusics
 }, dispatch)
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(Metal)

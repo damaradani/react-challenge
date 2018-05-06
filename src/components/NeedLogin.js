@@ -3,7 +3,6 @@ import swal from 'sweetalert'
 // import { Redirect } from 'react-router-dom'
 
 class NeedLogin extends Component {
-
   componentWillMount() {
     let token = localStorage.getItem('token')
     if (!token) {

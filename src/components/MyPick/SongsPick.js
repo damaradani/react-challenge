@@ -1,20 +1,24 @@
 import React, { Component } from 'react'
-import { addMyPick } from '../../store/MyPick/actions'
+import { removeMyPick } from '../../store/MyPick/actions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import swal from 'sweetalert'
-import './Songs.css'
+import './SongsPick.css'
 
 class Songs extends Component {
-  addToPick() {
-    let trackId = this.props.data.trackId
-    // check track id inside mypick, is it there or not ?
-    let cekTrackId = this.props.mypicks.filter(mypick => mypick.trackId === trackId)
-    // Condition to check if track already in mypick or not 
-    if (cekTrackId.length === 0) {
-      this.props.addMyPick(this.props.data)
-      swal('Great..!', 'Songs Successfully Added to your Pick', 'success')
-    }
+  removePick() {
+    swal({
+      title: 'Are you sure?',
+      text: `Are you really gonna delete this?"`,
+      icon: 'warning',
+      buttons: [true, 'Yes Delete it']
+    }).then(result => {
+      if (result) {
+        console.log(this.props.data)
+        this.props.removeMyPick(this.props.data.trackId)
+        swal('Bye..!', 'Songs Successfully deleted', 'success')
+      }
+    })
   }
 
   render() {
@@ -49,7 +53,7 @@ class Songs extends Component {
           </audio>
         </td>
         <td>
-          <a className="addPick" onClick={() => this.addToPick()}><i className="small material-icons">add_circle</i></a>
+          <a className="removePick" onClick={() => this.removePick()}><i className="small material-icons">remove_circle</i></a>
         </td>
       </tr>
     )
@@ -61,7 +65,7 @@ const mapStateToProps = (state) => ({
 }) 
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  addMyPick
+  removeMyPick
 }, dispatch)
 
 export default connect(
