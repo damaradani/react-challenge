@@ -58,7 +58,7 @@ class Login extends Component {
             value={this.state.email} onChange={this.handleInput} />
             <Input type="password" label="password" name="password" s={12}
             value={this.state.password} onChange={this.handleInput} />
-            <Button className="modal-close">Login</Button>
+            <Button type="submit" className="modal-close">Login</Button>
           </Row>
         </form>
       </Modal>
