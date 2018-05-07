@@ -8,12 +8,18 @@ import './Songs.css'
 class Songs extends Component {
   addToPick() {
     let trackId = this.props.data.trackId
+    let mypickLen = this.props.mypicks.length
     // check track id inside mypick, is it there or not ?
     let cekTrackId = this.props.mypicks.filter(mypick => mypick.trackId === trackId)
-    // Condition to check if track already in mypick or not 
-    if (cekTrackId.length === 0) {
-      this.props.addMyPick(this.props.data)
-      swal('Great..!', 'Songs Successfully Added to your Pick', 'success')
+    // condition to limit only 9 picks of song
+    if (mypickLen < 9) {
+      // Condition to check if track already in mypick or not
+      if (cekTrackId.length === 0) {
+        this.props.addMyPick(this.props.data)
+        swal('Great..!', 'Songs Successfully Added to your Pick', 'success')
+      }
+    } else {
+      swal('Sorry!', 'You already have 9 picks, delete one to Add new pick', 'error')
     }
   }
 
